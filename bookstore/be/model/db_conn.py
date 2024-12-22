@@ -1,9 +1,45 @@
-from be.model import store
+import psycopg2
+from psycopg2 import pool
+import logging
 
 
 class DBConn:
     def __init__(self):
-        self.conn = store.get_db_conn()
+        self.conn = None
+        self.pool = None
+
+    def init_db_pool(self):
+        try:
+            self.pool = psycopg2.pool.SimpleConnectionPool(
+                minconn=1,
+                maxconn=10,
+                host="localhost",
+                database="bookstore",
+                user="your_username",
+                password="your_password"
+            )
+            return True
+        except Exception as e:
+            logging.error(f"数据库连接池初始化失败: {str(e)}")
+            return False
+
+    def get_db_conn(self):
+        try:
+            if self.pool:
+                self.conn = self.pool.getconn()
+                return self.conn
+            return None
+        except Exception as e:
+            logging.error(f"获取数据库连接失败: {str(e)}")
+            return None
+
+    def close_db_conn(self):
+        try:
+            if self.conn:
+                self.pool.putconn(self.conn)
+                self.conn = None
+        except Exception as e:
+            logging.error(f"关闭数据库连接失败: {str(e)}")
 
     def user_id_exist(self, user_id):
         cursor = self.conn.execute(
