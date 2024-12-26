@@ -11,7 +11,7 @@
 ## 安装步骤
 1. 克隆项目
 
-git clone [your-repository-url]
+git clone https://github.com/1433223-Edward/Bookstore.git
 
 pip install -r requirements.txt
 
