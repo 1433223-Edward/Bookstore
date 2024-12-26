@@ -1,0 +1,18 @@
+[run]
+source = be/
+omit = 
+    */test/*
+    */__init__.py
+    */conf.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    pass
+    def main()
+
+[html]
+directory = coverage_html 
